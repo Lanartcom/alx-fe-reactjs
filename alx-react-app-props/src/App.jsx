@@ -1,15 +1,18 @@
+// src/App.jsx
 import Header from './components/Header'
 import MainContent from './components/MainContent'
 import Footer from './components/Footer'
 import WelcomeMessage from './components/WelcomeMessage'
 import UserProfile from './components/UserProfile'
 import { useState } from 'react'
+import UserContext from './UserContext' // Import UserContext
 import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg' // Updated path if viteLogo is in `src/assets`
+import viteLogo from './assets/vite.svg'
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const userData = { name: "Alice", age: 25, bio: "Loves hiking and photography" }
 
   return (
     <div className="App">
@@ -18,7 +21,11 @@ function App() {
       <main className="main-content">
         <MainContent />
         <WelcomeMessage />
-        <UserProfile name="Alice" age="25" bio="Loves hiking and photography" />
+        
+        {/* Wrap UserProfile with UserContext.Provider and pass userData as value */}
+        <UserContext.Provider value={userData}>
+          <UserProfile />
+        </UserContext.Provider>
       </main>
 
       <div className="logos">
