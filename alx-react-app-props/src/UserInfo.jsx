@@ -1,8 +1,8 @@
-import React from 'react';
-import UserDetails from './UserDetails';
+// src/UserInfo.jsx
+import UserDetails from './UserDetails'
 
 function UserInfo() {
-  return <UserDetails />; // No need to pass userData anymore
+  return <UserDetails />
 }
 
-export default UserInfo;
+export default UserInfo
