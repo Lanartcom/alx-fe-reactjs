@@ -7,7 +7,7 @@ import EditRecipeForm from './components/EditRecipeForm'
 import DeleteRecipeButton from './components/DeleteRecipeButton'
 import SearchBar from './components/SearchBar' // Import the SearchBar component
 import FavoritesList from './components/FavoritesList' // Import the FavoritesList component
-import RecommendationsList from './components/RecommedationsList' // Import the RecommendationsList component
+import RecommendationsList from './components/RecommendationsList' // Import the RecommendationsList component
 
 const App = () => {
   return (
