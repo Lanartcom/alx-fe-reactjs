@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import useRecipeStore from '../components/recipeStore' // Adjust the import path if necessary
 
 const RecipeList = () => {
-  const recipes = useRecipeStore((state) => state.recipes)
+  // Use `filteredRecipes` from the store to display search results
+  const filteredRecipes = useRecipeStore((state) => state.filteredRecipes)
   const deleteRecipe = useRecipeStore((state) => state.deleteRecipe)
   const navigate = useNavigate() // Replaces useHistory
 
@@ -17,9 +18,9 @@ const RecipeList = () => {
   return (
     <div>
       <h1>Recipe List</h1>
-      {recipes.length === 0 && <p>No recipes available. Add a new recipe!</p>}
+      {filteredRecipes.length === 0 && <p>No recipes found. Try adjusting your search or filters.</p>}
 
-      {recipes.map((recipe) => (
+      {filteredRecipes.map((recipe) => (
         <div
           key={recipe.id}
           style={{

@@ -5,12 +5,16 @@ import RecipeList from './components/RecipeList'
 import RecipeDetails from './components/RecipeDetails'
 import EditRecipeForm from './components/EditRecipeForm'
 import DeleteRecipeButton from './components/DeleteRecipeButton'
+import SearchBar from './components/SearchBar' // Import the SearchBar component
 
 const App = () => {
   return (
     <Router>
       <div style={{ padding: '2rem' }}>
         <h1>Recipe Sharing Application</h1>
+
+        {/* Integrate the SearchBar component for search functionality */}
+        <SearchBar />
 
         {/* Define Routes for different views */}
         <Routes>
