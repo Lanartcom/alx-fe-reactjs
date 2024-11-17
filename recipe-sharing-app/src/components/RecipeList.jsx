@@ -1,19 +1,28 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import useRecipeStore from '../components/recipeStore' // Adjust the import path if necessary
+import useRecipeStore from '../components/recipeStore'
 
 const RecipeList = () => {
-  // Use `filteredRecipes` from the store to display search results
-  const filteredRecipes = useRecipeStore((state) => state.filteredRecipes)
-  const deleteRecipe = useRecipeStore((state) => state.deleteRecipe)
-  const navigate = useNavigate() // Replaces useHistory
+  // Accessing the store state with defensive checks
+  const filteredRecipes = useRecipeStore((state) => state.filteredRecipes) || [] // Ensures it's an array
+  const favorites = useRecipeStore((state) => state.favorites) || [] // Ensures it's an array
 
-  const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this recipe?')) {
-      deleteRecipe(id)
-      alert('Recipe deleted successfully!')
+  // Memoize callbacks to avoid causing re-renders due to new function references
+  const addFavorite = useRecipeStore((state) => state.addFavorite)
+  const removeFavorite = useRecipeStore((state) => state.removeFavorite)
+  const navigate = useNavigate()
+
+  const handleToggleFavorite = useMemo(() => {
+    return (id) => {
+      if (favorites.includes(id)) {
+        removeFavorite(id)
+        alert('Removed from favorites!')
+      } else {
+        addFavorite(id)
+        alert('Added to favorites!')
+      }
     }
-  }
+  }, [favorites, addFavorite, removeFavorite])
 
   return (
     <div>
@@ -33,46 +42,26 @@ const RecipeList = () => {
         >
           <h3>{recipe.title}</h3>
           <p>{recipe.description}</p>
-
-          {/* Links to view and edit individual recipes */}
           <Link to={`/recipe/${recipe.id}`}>View Details</Link>
           <Link to={`/recipe/${recipe.id}/edit`} style={{ marginLeft: '10px' }}>
             Edit
           </Link>
-
-          {/* Delete button */}
           <button
-            onClick={() => handleDelete(recipe.id)}
+            onClick={() => handleToggleFavorite(recipe.id)}
             style={{
               marginLeft: '10px',
               color: 'white',
-              backgroundColor: 'red',
+              backgroundColor: favorites.includes(recipe.id) ? 'gray' : 'blue',
               border: 'none',
               padding: '5px 10px',
               borderRadius: '3px',
               cursor: 'pointer',
             }}
           >
-            Delete
+            {favorites.includes(recipe.id) ? 'Unfavorite' : 'Favorite'}
           </button>
         </div>
       ))}
-
-      {/* Link to add a new recipe */}
-      <div style={{ marginTop: '20px' }}>
-        <Link
-          to="/add-recipe"
-          style={{
-            textDecoration: 'none',
-            color: 'white',
-            backgroundColor: 'green',
-            padding: '10px 20px',
-            borderRadius: '5px',
-          }}
-        >
-          Add New Recipe
-        </Link>
-      </div>
     </div>
   )
 }

@@ -6,6 +6,8 @@ import RecipeDetails from './components/RecipeDetails'
 import EditRecipeForm from './components/EditRecipeForm'
 import DeleteRecipeButton from './components/DeleteRecipeButton'
 import SearchBar from './components/SearchBar' // Import the SearchBar component
+import FavoritesList from './components/FavoritesList' // Import the FavoritesList component
+import RecommendationsList from './components/RecommedationsList' // Import the RecommendationsList component
 
 const App = () => {
   return (
@@ -15,6 +17,14 @@ const App = () => {
 
         {/* Integrate the SearchBar component for search functionality */}
         <SearchBar />
+
+        {/* Favorites and Recommendations sections */}
+        <div style={{ marginTop: '2rem' }}>
+          <FavoritesList />
+        </div>
+        <div style={{ marginTop: '2rem' }}>
+          <RecommendationsList />
+        </div>
 
         {/* Define Routes for different views */}
         <Routes>
