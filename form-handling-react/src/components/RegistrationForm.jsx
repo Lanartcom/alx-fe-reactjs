@@ -19,8 +19,19 @@ const RegistrationForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.username || !formData.email || !formData.password) {
-      setErrors("All fields are required.");
+    const { username, email, password } = formData;
+
+    // Validation logic
+    if (!username) {
+      setErrors("Username is required.");
+      return;
+    }
+    if (!email) {
+      setErrors("Email is required.");
+      return;
+    }
+    if (!password) {
+      setErrors("Password is required.");
       return;
     }
 
