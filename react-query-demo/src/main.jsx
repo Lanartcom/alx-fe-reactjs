@@ -1,15 +1,11 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { BrowserRouter as Router } from 'react-router-dom'
-import 'virtual:windi.css'
-import './index.css'
-import App from './App'
+import { StrictMode } from 'react'; // Ensures your app runs in React's Strict Mode
+import { createRoot } from 'react-dom/client'; // React 18+ way of rendering components
+import './index.css'; // Includes global styles for your app
+import App from './App.jsx'; // Imports the main App component
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Router>
-      <App />
-    </Router>
-  </React.StrictMode>,
-  document.getElementById('root')
-)
+// Create the root DOM node and render the app
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);
