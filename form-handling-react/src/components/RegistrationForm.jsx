@@ -6,48 +6,31 @@ const RegistrationForm = () => {
     email: "",
     password: "",
   });
-
-  const [errors, setErrors] = useState("");
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const { username, email, password } = formData;
 
-    // Validation logic
-    if (!username) {
-      setErrors("Username is required.");
-      return;
-    }
-    if (!email) {
-      setErrors("Email is required.");
-      return;
-    }
-    if (!password) {
-      setErrors("Password is required.");
+    if (!username || !email || !password) {
+      setError("All fields are required.");
       return;
     }
 
-    setErrors("");
-    console.log("Submitted Data:", formData);
-
-    // Mock API request simulation
-    setTimeout(() => {
-      alert("User registered successfully!");
-    }, 1000);
+    setError("");
+    console.log("Form Submitted:", formData);
+    alert("User registered successfully!");
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>User Registration (Controlled Components)</h2>
-      {errors && <p style={{ color: "red" }}>{errors}</p>}
+      <h2>Registration Form (Controlled Components)</h2>
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <div>
         <label>Username:</label>
         <input
