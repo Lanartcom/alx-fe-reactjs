@@ -1,42 +1,35 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Profile from "./components/Profile";
-import ProfileDetails from "./pages/ProfileDetails";
-import ProfileSettings from "./pages/ProfileSettings";
-import BlogPost from "./pages/BlogPost";
+import { AuthProvider, useAuth } from "./hooks/useAuth";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Profile from "./components/Profile";
+import BlogPost from "./pages/BlogPost";
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isAuthenticated, login, logout } = useAuth();
 
   return (
-    <Router>
-      <div>
-        <button onClick={() => setIsAuthenticated(!isAuthenticated)}>
-          {isAuthenticated ? "Logout" : "Login"}
-        </button>
-        <Routes>
-          {/* Home Route */}
-          <Route path="/" element={<h1>Home Page</h1>} />
-
-          {/* Protected Profile Route with Nested Routes */}
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <Profile />
-              </ProtectedRoute>
-            }
-          >
-            <Route path="details" element={<ProfileDetails />} />
-            <Route path="settings" element={<ProfileSettings />} />
-          </Route>
-
-          {/* Dynamic Blog Post Route */}
-          <Route path="/blog/:id" element={<BlogPost />} />
-        </Routes>
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div>
+          <button onClick={isAuthenticated ? logout : login}>
+            {isAuthenticated ? "Logout" : "Login"}
+          </button>
+          <Routes>
+            <Route path="/" element={<h1>Home Page</h1>} />
+            <Route
+              path="/profile/*"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/blog/:id" element={<BlogPost />} />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   );
 };
 
