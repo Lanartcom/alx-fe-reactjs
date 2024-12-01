@@ -16,11 +16,11 @@ test('adds a new todo when input is provided and button is clicked', () => {
   const input = screen.getByPlaceholderText(/Add a new todo/i);
   const button = screen.getByText(/Add Todo/i);
 
-  
+ 
   fireEvent.change(input, { target: { value: 'Learn Testing' } });
   fireEvent.click(button);
 
-  
+ 
   expect(screen.getByText(/Learn Testing/i)).toBeInTheDocument();
 });
 
@@ -29,7 +29,7 @@ test('toggles the todo completed state when clicked', () => {
 
   const todoText = screen.getByText(/Learn React/i);
   
-  
+
   fireEvent.click(todoText);
 
   
