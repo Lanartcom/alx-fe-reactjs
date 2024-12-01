@@ -6,9 +6,11 @@ const Profile = () => {
     <div>
       <h1>Profile Page</h1>
       <nav>
-        <Link to="details">Profile Details</Link> | <Link to="settings">Profile Settings</Link>
+        <Link to="details">Profile Details</Link> |{" "}
+        <Link to="settings">Profile Settings</Link>
       </nav>
-      <Outlet /> {/* Nested routes will render here */}
+      {/* Nested routes will render here */}
+      <Outlet />
     </div>
   );
 };
