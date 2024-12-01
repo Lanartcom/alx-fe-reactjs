@@ -1,7 +1,7 @@
 import React from "react";
 import { useQuery } from "react-query";
 
-// Function to fetch posts from the JSONPlaceholder API
+// Function to fetch posts
 const fetchPosts = async () => {
   const response = await fetch("https://jsonplaceholder.typicode.com/posts");
   if (!response.ok) {
@@ -11,20 +11,14 @@ const fetchPosts = async () => {
 };
 
 const PostsComponent = () => {
-  // Use React Query to fetch data
-  const { data, error, isLoading, refetch } = useQuery("posts", fetchPosts, {
-    staleTime: 300000, // Cache data for 5 minutes
-    refetchOnWindowFocus: false, // Disable automatic refetch on window focus
-  });
+  const { data, isLoading, isError, error } = useQuery("posts", fetchPosts);
 
-  // Handle loading and error states
-  if (isLoading) return <p>Loading posts...</p>;
-  if (error) return <p>Error fetching posts: {error.message}</p>;
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error fetching posts: {error.message}</p>;
 
   return (
     <div>
       <h2>Posts</h2>
-      <button onClick={refetch}>Refetch Posts</button>
       <ul>
         {data.map((post) => (
           <li key={post.id}>
