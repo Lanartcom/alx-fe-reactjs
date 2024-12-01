@@ -8,7 +8,7 @@ const TodoList = () => {
   const [newTodo, setNewTodo] = useState("");
 
   const addTodo = () => {
-    if (!newTodo.trim()) return; // Prevent empty todos
+    if (!newTodo.trim()) return; // Prevent adding empty todos
     setTodos([...todos, { id: Date.now(), text: newTodo.trim(), completed: false }]);
     setNewTodo("");
   };
@@ -32,14 +32,17 @@ const TodoList = () => {
         {todos.map((todo) => (
           <li
             key={todo.id}
-            onClick={() => toggleTodo(todo.id)}
             style={{
               textDecoration: todo.completed ? "line-through" : "none",
               cursor: "pointer",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
-            {todo.text}
+            <span onClick={() => toggleTodo(todo.id)}>{todo.text}</span>
             <button
+              aria-label={`Delete ${todo.text}`}
               onClick={(e) => {
                 e.stopPropagation(); // Prevent toggle when clicking delete
                 deleteTodo(todo.id);
