@@ -4,19 +4,36 @@ const AddRecipeForm = ({ onAddRecipe }) => {
   const [title, setTitle] = useState('');
   const [ingredients, setIngredients] = useState('');
   const [steps, setSteps] = useState('');
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState({});
+
+  // Validation function
+  const validate = () => {
+    const newErrors = {};
+
+    if (!title.trim()) {
+      newErrors.title = 'Recipe title is required.';
+    }
+
+    if (!ingredients.trim()) {
+      newErrors.ingredients = 'Ingredients are required.';
+    } else if (ingredients.split(',').length < 2) {
+      newErrors.ingredients = 'Please include at least two ingredients.';
+    }
+
+    if (!steps.trim()) {
+      newErrors.steps = 'Preparation steps are required.';
+    }
+
+    return newErrors;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validation checks
-    if (!title || !ingredients || !steps) {
-      setError('All fields are required.');
-      return;
-    }
-
-    if (ingredients.split(',').length < 2) {
-      setError('Please list at least two ingredients separated by commas.');
+    // Validate form fields
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
 
@@ -25,7 +42,7 @@ const AddRecipeForm = ({ onAddRecipe }) => {
       id: Date.now(),
       title,
       summary: `Ingredients: ${ingredients.split(',').length} items. Preparation steps provided.`,
-      image: 'https://via.placeholder.com/150', // Placeholder image
+      image: 'https://via.placeholder.com/150',
       ingredients: ingredients.split(',').map((item) => item.trim()),
       steps: steps.split('.').map((step) => step.trim()),
     };
@@ -37,13 +54,12 @@ const AddRecipeForm = ({ onAddRecipe }) => {
     setTitle('');
     setIngredients('');
     setSteps('');
-    setError('');
+    setErrors({});
   };
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-6 mx-auto max-w-2xl mt-6">
       <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Add New Recipe</h2>
-      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Recipe Title */}
         <div className="flex flex-col">
@@ -56,8 +72,11 @@ const AddRecipeForm = ({ onAddRecipe }) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter the recipe title"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+              errors.title ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+            }`}
           />
+          {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
         </div>
 
         {/* Ingredients */}
@@ -70,9 +89,12 @@ const AddRecipeForm = ({ onAddRecipe }) => {
             value={ingredients}
             onChange={(e) => setIngredients(e.target.value)}
             placeholder="Enter ingredients separated by commas (e.g., Flour, Sugar, Eggs)"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+              errors.ingredients ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+            }`}
             rows="3"
           />
+          {errors.ingredients && <p className="text-red-500 text-sm mt-1">{errors.ingredients}</p>}
         </div>
 
         {/* Steps */}
@@ -85,9 +107,12 @@ const AddRecipeForm = ({ onAddRecipe }) => {
             value={steps}
             onChange={(e) => setSteps(e.target.value)}
             placeholder="Enter preparation steps separated by periods (e.g., Preheat oven. Mix ingredients. Bake for 30 minutes.)"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+              errors.steps ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+            }`}
             rows="3"
           />
+          {errors.steps && <p className="text-red-500 text-sm mt-1">{errors.steps}</p>}
         </div>
 
         {/* Submit Button */}
