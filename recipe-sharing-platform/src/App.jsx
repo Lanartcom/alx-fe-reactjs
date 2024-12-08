@@ -1,11 +1,18 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './components/HomePage';
+import RecipeDetail from './components/RecipeDetail';
 
 const App = () => {
   return (
-    <div className="min-h-screen bg-gray-100">
-      <HomePage />
-    </div>
+    <Router>
+      <Routes>
+        {/* Home Page Route */}
+        <Route path="/" element={<HomePage />} />
+        {/* Recipe Detail Route */}
+        <Route path="/recipe/:id" element={<RecipeDetail />} />
+      </Routes>
+    </Router>
   );
 };
 
