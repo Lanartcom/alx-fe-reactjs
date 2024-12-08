@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import AddRecipeForm from './AddRecipeForm';
 
 const HomePage = () => {
   const [recipes, setRecipes] = useState([]);
 
-  // Load recipe data from the local JSON file
+  // Load initial recipe data
   useEffect(() => {
     fetch('/src/data.json')
       .then((response) => response.json())
@@ -11,11 +12,17 @@ const HomePage = () => {
       .catch((error) => console.error('Error loading recipes:', error));
   }, []);
 
+  // Add a new recipe
+  const handleAddRecipe = (newRecipe) => {
+    setRecipes((prevRecipes) => [...prevRecipes, newRecipe]);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="container mx-auto p-6">
+    <div className="w-full min-h-screen bg-yellow-200">
+      <div className="w-full px-6">
         <h1 className="text-3xl font-bold text-center mb-6">Recipe Sharing Platform</h1>
-        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <AddRecipeForm onAddRecipe={handleAddRecipe} />
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-6">
           {recipes.map((recipe) => (
             <div
               key={recipe.id}
@@ -30,7 +37,7 @@ const HomePage = () => {
                 <h2 className="text-xl font-semibold text-gray-800">{recipe.title}</h2>
                 <p className="text-gray-600 mt-2">{recipe.summary}</p>
                 <button
-                  className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                  className="mt-4 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-green-600 transition-colors"
                 >
                   View Recipe
                 </button>
