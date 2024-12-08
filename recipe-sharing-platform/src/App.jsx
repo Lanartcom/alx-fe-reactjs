@@ -1,14 +1,12 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import HomePage from './components/HomePage';
 
-function App() {
+const App = () => {
   return (
-    <div className="text-blue-500 text-center text-xl">
-      Tailwind CSS is working!
+    <div className="min-h-screen bg-gray-100">
+      <HomePage />
     </div>
   );
-}
+};
 
 export default App;
