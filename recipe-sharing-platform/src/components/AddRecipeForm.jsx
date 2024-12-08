@@ -3,14 +3,14 @@ import React, { useState } from 'react';
 const AddRecipeForm = ({ onAddRecipe }) => {
   const [title, setTitle] = useState('');
   const [ingredients, setIngredients] = useState('');
-  const [instructions, setInstructions] = useState('');
+  const [steps, setSteps] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // Validation checks
-    if (!title || !ingredients || !instructions) {
+    if (!title || !ingredients || !steps) {
       setError('All fields are required.');
       return;
     }
@@ -24,10 +24,10 @@ const AddRecipeForm = ({ onAddRecipe }) => {
     const newRecipe = {
       id: Date.now(),
       title,
-      summary: `Ingredients: ${ingredients.split(',').length} items. Instructions provided.`,
-      image: 'https://via.placeholder.com/150', // Placeholder for now
+      summary: `Ingredients: ${ingredients.split(',').length} items. Preparation steps provided.`,
+      image: 'https://via.placeholder.com/150', // Placeholder image
       ingredients: ingredients.split(',').map((item) => item.trim()),
-      instructions: instructions.split('.').map((step) => step.trim()),
+      steps: steps.split('.').map((step) => step.trim()),
     };
 
     // Pass the new recipe to the parent handler
@@ -36,7 +36,7 @@ const AddRecipeForm = ({ onAddRecipe }) => {
     // Clear the form
     setTitle('');
     setIngredients('');
-    setInstructions('');
+    setSteps('');
     setError('');
   };
 
@@ -75,16 +75,16 @@ const AddRecipeForm = ({ onAddRecipe }) => {
           />
         </div>
 
-        {/* Instructions */}
+        {/* Steps */}
         <div className="flex flex-col">
-          <label htmlFor="instructions" className="text-gray-700 font-medium mb-2">
-            Instructions (step-separated by periods)
+          <label htmlFor="steps" className="text-gray-700 font-medium mb-2">
+            Preparation Steps (step-separated by periods)
           </label>
           <textarea
-            id="instructions"
-            value={instructions}
-            onChange={(e) => setInstructions(e.target.value)}
-            placeholder="Enter instructions separated by periods (e.g., Preheat oven. Mix ingredients. Bake for 30 minutes.)"
+            id="steps"
+            value={steps}
+            onChange={(e) => setSteps(e.target.value)}
+            placeholder="Enter preparation steps separated by periods (e.g., Preheat oven. Mix ingredients. Bake for 30 minutes.)"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows="3"
           />
@@ -93,7 +93,7 @@ const AddRecipeForm = ({ onAddRecipe }) => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-green-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700 transition-colors"
+          className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-600 transition-colors"
         >
           Add Recipe
         </button>

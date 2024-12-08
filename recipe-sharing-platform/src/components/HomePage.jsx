@@ -42,6 +42,11 @@ const HomePage = () => {
                   <p className="text-gray-600 mt-2">
                     {recipe.summary || 'No summary available.'}
                   </p>
+                  <p className="text-gray-500 mt-1 text-sm">
+                    {recipe.steps?.length
+                      ? `${recipe.steps.length} steps included`
+                      : 'No steps provided.'}
+                  </p>
                   <button
                     className="mt-4 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-green-600 transition-colors"
                   >
