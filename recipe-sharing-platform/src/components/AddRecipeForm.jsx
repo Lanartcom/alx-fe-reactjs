@@ -3,14 +3,14 @@ import React, { useState } from 'react';
 const AddRecipeForm = ({ onAddRecipe }) => {
   const [title, setTitle] = useState('');
   const [ingredients, setIngredients] = useState('');
-  const [steps, setSteps] = useState('');
+  const [instructions, setInstructions] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // Validation checks
-    if (!title || !ingredients || !steps) {
+    if (!title || !ingredients || !instructions) {
       setError('All fields are required.');
       return;
     }
@@ -20,20 +20,23 @@ const AddRecipeForm = ({ onAddRecipe }) => {
       return;
     }
 
-    // Call the callback to add the new recipe
+    // Create the new recipe object
     const newRecipe = {
       id: Date.now(),
       title,
-      summary: `Ingredients: ${ingredients}. Steps: ${steps}`,
-      image: 'https://via.placeholder.com/150',
+      summary: `Ingredients: ${ingredients.split(',').length} items. Instructions provided.`,
+      image: 'https://via.placeholder.com/150', // Placeholder for now
+      ingredients: ingredients.split(',').map((item) => item.trim()),
+      instructions: instructions.split('.').map((step) => step.trim()),
     };
 
+    // Pass the new recipe to the parent handler
     onAddRecipe(newRecipe);
 
     // Clear the form
     setTitle('');
     setIngredients('');
-    setSteps('');
+    setInstructions('');
     setError('');
   };
 
@@ -60,28 +63,28 @@ const AddRecipeForm = ({ onAddRecipe }) => {
         {/* Ingredients */}
         <div className="flex flex-col">
           <label htmlFor="ingredients" className="text-gray-700 font-medium mb-2">
-            Ingredients
+            Ingredients (comma-separated)
           </label>
           <textarea
             id="ingredients"
             value={ingredients}
             onChange={(e) => setIngredients(e.target.value)}
-            placeholder="Enter ingredients separated by commas"
+            placeholder="Enter ingredients separated by commas (e.g., Flour, Sugar, Eggs)"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows="3"
           />
         </div>
 
-        {/* Preparation Steps */}
+        {/* Instructions */}
         <div className="flex flex-col">
-          <label htmlFor="steps" className="text-gray-700 font-medium mb-2">
-            Preparation Steps
+          <label htmlFor="instructions" className="text-gray-700 font-medium mb-2">
+            Instructions (step-separated by periods)
           </label>
           <textarea
-            id="steps"
-            value={steps}
-            onChange={(e) => setSteps(e.target.value)}
-            placeholder="Enter preparation steps"
+            id="instructions"
+            value={instructions}
+            onChange={(e) => setInstructions(e.target.value)}
+            placeholder="Enter instructions separated by periods (e.g., Preheat oven. Mix ingredients. Bake for 30 minutes.)"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows="3"
           />
