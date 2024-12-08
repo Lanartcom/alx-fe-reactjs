@@ -58,12 +58,15 @@ const AddRecipeForm = ({ onAddRecipe }) => {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6 mx-auto max-w-2xl mt-6">
+    <div className="bg-white shadow-lg rounded-lg p-6 mx-auto max-w-2xl mt-6 md:mt-12">
       <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Add New Recipe</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Recipe Title */}
-        <div className="flex flex-col">
-          <label htmlFor="title" className="text-gray-700 font-medium mb-2">
+        <div className="flex flex-col md:flex-row md:items-center">
+          <label
+            htmlFor="title"
+            className="text-gray-700 font-medium mb-2 md:mb-0 md:w-1/4 md:text-right md:pr-4"
+          >
             Recipe Title
           </label>
           <input
@@ -76,13 +79,16 @@ const AddRecipeForm = ({ onAddRecipe }) => {
               errors.title ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
             }`}
           />
-          {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
+          {errors.title && <p className="text-red-500 text-sm mt-1 md:ml-4">{errors.title}</p>}
         </div>
 
         {/* Ingredients */}
-        <div className="flex flex-col">
-          <label htmlFor="ingredients" className="text-gray-700 font-medium mb-2">
-            Ingredients (comma-separated)
+        <div className="flex flex-col md:flex-row md:items-center">
+          <label
+            htmlFor="ingredients"
+            className="text-gray-700 font-medium mb-2 md:mb-0 md:w-1/4 md:text-right md:pr-4"
+          >
+            Ingredients
           </label>
           <textarea
             id="ingredients"
@@ -94,13 +100,18 @@ const AddRecipeForm = ({ onAddRecipe }) => {
             }`}
             rows="3"
           />
-          {errors.ingredients && <p className="text-red-500 text-sm mt-1">{errors.ingredients}</p>}
+          {errors.ingredients && (
+            <p className="text-red-500 text-sm mt-1 md:ml-4">{errors.ingredients}</p>
+          )}
         </div>
 
         {/* Steps */}
-        <div className="flex flex-col">
-          <label htmlFor="steps" className="text-gray-700 font-medium mb-2">
-            Preparation Steps (step-separated by periods)
+        <div className="flex flex-col md:flex-row md:items-center">
+          <label
+            htmlFor="steps"
+            className="text-gray-700 font-medium mb-2 md:mb-0 md:w-1/4 md:text-right md:pr-4"
+          >
+            Preparation Steps
           </label>
           <textarea
             id="steps"
@@ -112,16 +123,18 @@ const AddRecipeForm = ({ onAddRecipe }) => {
             }`}
             rows="3"
           />
-          {errors.steps && <p className="text-red-500 text-sm mt-1">{errors.steps}</p>}
+          {errors.steps && <p className="text-red-500 text-sm mt-1 md:ml-4">{errors.steps}</p>}
         </div>
 
         {/* Submit Button */}
-        <button
+        <div className="flex flex-col md:flex-row md:justify-end">
+          <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-600 transition-colors"
-        >
-          Add Recipe
-        </button>
+    className="bg-blue-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-600 transition-colors"
+  >
+            Add Recipe
+          </button>
+        </div>
       </form>
     </div>
   );
