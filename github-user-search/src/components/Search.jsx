@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchAdvancedUserSearch } from '../services/githubService';
+import SearchInput from './SearchInput';
 
 const Search = () => {
     const [username, setUsername] = useState('');
@@ -10,9 +11,8 @@ const Search = () => {
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalCount, setTotalCount] = useState(0);
-    const usersPerPage = 10; // Number of results to display per page
+    const usersPerPage = 10;
 
-    // Function to handle form submission
     const handleSearch = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -28,7 +28,7 @@ const Search = () => {
                 page: currentPage,
             });
             setResults(data.items || []);
-            setTotalCount(data.total_count || 0); // Total number of results
+            setTotalCount(data.total_count || 0);
         } catch (err) {
             setError('Looks like we cant find the user');
         } finally {
@@ -36,37 +36,22 @@ const Search = () => {
         }
     };
 
-    // Handle page change with useEffect
     useEffect(() => {
         if (currentPage > 0) {
-            handleSearch({ preventDefault: () => {} }); // Simulate a form submission on page change
+            handleSearch({ preventDefault: () => {} });
         }
     }, [currentPage]);
 
-    // Function to go to the previous page
-    const handlePreviousPage = () => {
-        if (currentPage > 1) {
-            setCurrentPage((prevPage) => prevPage - 1);
-        }
-    };
-
-    // Function to go to the next page
-    const handleNextPage = () => {
-        const totalPages = Math.ceil(totalCount / usersPerPage);
-        if (currentPage < totalPages) {
-            setCurrentPage((prevPage) => prevPage + 1);
-        }
-    };
-
     return (
         <div>
-            <form onSubmit={handleSearch}>
-                <input
-                    type="text"
-                    placeholder="Search by username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
+            {/* Use the SearchInput component here */}
+            <SearchInput
+                username={username}
+                setUsername={setUsername}
+                handleSearch={handleSearch}
+            />
+            {/* Other input fields and UI elements */}
+            <div>
                 <input
                     type="text"
                     placeholder="Location (e.g., San Francisco)"
@@ -79,50 +64,10 @@ const Search = () => {
                     value={minRepos}
                     onChange={(e) => setMinRepos(e.target.value)}
                 />
-                <button type="submit">Search</button>
-            </form>
-
+            </div>
             {loading && <p>Loading...</p>}
             {error && <p>{error}</p>}
-            {results.length > 0 && (
-                <div>
-                    {results.map((user) => (
-                        <div key={user.id}>
-                            <img src={user.avatar_url} alt={user.login} />
-                            <div>
-                                <h2>{user.login}</h2>
-                                <p>Location: {user.location || 'N/A'}</p>
-                                <p>Repositories: {user.public_repos || 'N/A'}</p>
-                                <a
-                                    href={user.html_url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    View Profile
-                                </a>
-                            </div>
-                        </div>
-                    ))}
-                    <div>
-                        <button
-                            onClick={handlePreviousPage}
-                            disabled={currentPage === 1}
-                        >
-                            Previous
-                        </button>
-                        <span>
-                            Page {currentPage} of{' '}
-                            {Math.ceil(totalCount / usersPerPage)}
-                        </span>
-                        <button
-                            onClick={handleNextPage}
-                            disabled={currentPage === Math.ceil(totalCount / usersPerPage)}
-                        >
-                            Next
-                        </button>
-                    </div>
-                </div>
-            )}
+            {/* Results and pagination logic */}
         </div>
     );
 };

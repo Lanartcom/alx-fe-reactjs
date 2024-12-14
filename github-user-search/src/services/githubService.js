@@ -1,32 +1,50 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://api.github.com', // Base URL for GitHub API
+    baseURL: 'https://api.github.com',
+    headers: {
+        Authorization: `token ${import.meta.env.VITE_GITHUB_API_KEY}`, // Optional: Use for authenticated requests
+    },
 });
 
 export const fetchAdvancedUserSearch = async ({ username, location, minRepos, perPage = 10, page = 1 }) => {
+    // Validate input parameters
+    if (!username && !location && !minRepos) {
+        throw new Error('At least one search criterion is required');
+    }
+
     try {
-        // Construct the search query using advanced GitHub Search API syntax
+        // Construct query using GitHub Search API syntax
         const query = [
             username ? `user:${username}` : '',
             location ? `location:${location}` : '',
             minRepos ? `repos:>=${minRepos}` : '',
         ]
-            .filter(Boolean) // Remove any empty values
-            .join('+'); // Combine all conditions with a "+" separator
+            .filter(Boolean)
+            .join('+');
 
-        // Make a GET request to the search endpoint with query and pagination parameters
+        // Make API request
         const response = await api.get(`/search/users`, {
             params: {
-                q: query, // The search query string
-                per_page: perPage, // Number of results per page
-                page: page, // Current page number
+                q: query,
+                per_page: perPage,
+                page: page,
             },
         });
 
-        return response.data; // Return the full API response
+        // Handle empty response
+        if (!response.data.items || response.data.items.length === 0) {
+            return { items: [], total_count: 0, message: 'No users found for the given criteria' };
+        }
+
+        return response.data;
     } catch (error) {
-        console.error('Error fetching advanced user search:', error);
-        throw error; // Re-throw the error to be handled in the component
+        // Log error with details for debugging
+        console.error('Error fetching advanced user search:', {
+            query,
+            params: { per_page: perPage, page },
+            error: error.response?.data || error.message,
+        });
+        throw error;
     }
 };
