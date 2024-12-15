@@ -9,6 +9,7 @@ const Search = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [singleUser, setSingleUser] = useState(null); // State for single-user data
+    const [page, setPage] = useState(1); // Track pagination
 
     const handleInputChange = (setter) => (e) => {
         setter(e.target.value);
@@ -20,6 +21,7 @@ const Search = () => {
         setError(null);
         setResults([]); // Clear previous results
         setSingleUser(null); // Clear single user data
+        setPage(1); // Reset page for new searches
 
         if (username && !location && !minRepos) {
             // Fetch single user if only username is provided
@@ -40,10 +42,32 @@ const Search = () => {
                 query: username,
                 location,
                 minRepos: minRepos ? parseInt(minRepos, 10) : undefined,
+                page: 1,
             });
             setResults(data.items || []);
         } catch (err) {
-            setError('Looks like we cant find the user.');
+            setError('Looks like we cant find any users.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleLoadMore = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const nextPage = page + 1;
+            const data = await searchUsers({
+                query: username,
+                location,
+                minRepos: minRepos ? parseInt(minRepos, 10) : undefined,
+                page: nextPage,
+            });
+            setResults((prevResults) => [...prevResults, ...(data.items || [])]);
+            setPage(nextPage); // Increment page count
+        } catch (err) {
+            setError('Failed to load more results.');
         } finally {
             setLoading(false);
         }
@@ -146,6 +170,16 @@ const Search = () => {
                         </div>
                     ))}
                 </div>
+            )}
+
+            {/* Load More Button */}
+            {results.length > 0 && !loading && (
+                <button
+                    onClick={handleLoadMore}
+                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-full mt-4"
+                >
+                    Load More
+                </button>
             )}
 
             {/* No Results Message */}

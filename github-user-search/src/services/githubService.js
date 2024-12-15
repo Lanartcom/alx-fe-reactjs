@@ -2,28 +2,11 @@ import axios from 'axios';
 
 const BASE_URL = 'https://api.github.com';
 
-// Create an Axios instance
-const api = axios.create({
-    baseURL: BASE_URL,
-});
-
-// Fetch user by username
-export const fetchUserData = async (username) => {
-    try {
-        const url = `${BASE_URL}/users/${username}`;
-        const response = await axios.get(url);
-        return response.data;
-    } catch (error) {
-        console.error(`Error fetching data for username "${username}":`, error.response?.data || error.message);
-        throw error;
-    }
-};
-
 // Fetch users based on advanced search criteria
-export const searchUsers = async ({ query = '', location, minRepos } = {}) => {
+export const searchUsers = async ({ query = '', location, minRepos, perPage = 30, page = 1 } = {}) => {
     try {
         // Build the search query dynamically
-        let searchQuery = query;
+        let searchQuery = query.trim();
         if (location) {
             searchQuery += ` location:${location}`;
         }
@@ -31,9 +14,11 @@ export const searchUsers = async ({ query = '', location, minRepos } = {}) => {
             searchQuery += ` repos:>=${minRepos}`;
         }
 
-        // Encode the entire query string
+        // Encode the query to be URL-safe
         const encodedQuery = encodeURIComponent(searchQuery.trim());
-        const url = `${BASE_URL}/search/users?q=${encodedQuery}`;
+
+        // Construct the full URL
+        const url = `${BASE_URL}/search/users?q=${encodedQuery}&per_page=${perPage}&page=${page}`;
 
         // Make the request
         const response = await axios.get(url);
