@@ -21,13 +21,13 @@ const Search = () => {
 
         try {
             const data = await searchUsers({
-                username,
+                query: username,
                 location,
                 minRepos: minRepos ? parseInt(minRepos, 10) : undefined,
             });
             setResults(data.items || []);
         } catch (err) {
-            setError('Failed to fetch users. Please check your inputs and try again.');
+            setError('Looks like we cant find the user.');
         } finally {
             setLoading(false);
         }
@@ -37,27 +37,34 @@ const Search = () => {
         <div className="p-4 max-w-lg mx-auto">
             <h1 className="text-4xl font-bold mb-6">GitHub User Search</h1>
             <form onSubmit={handleFormSubmit} className="space-y-4">
+                {/* Username Input */}
                 <input
                     type="text"
-                    placeholder="Username"
+                    placeholder="Username (optional)"
                     value={username}
                     onChange={handleInputChange(setUsername)}
                     className="border p-2 rounded w-full"
                 />
+
+                {/* Location Input */}
                 <input
                     type="text"
-                    placeholder="Location"
+                    placeholder="Location (optional)"
                     value={location}
                     onChange={handleInputChange(setLocation)}
                     className="border p-2 rounded w-full"
                 />
+
+                {/* Minimum Repositories Input */}
                 <input
                     type="number"
-                    placeholder="Minimum Repositories"
+                    placeholder="Minimum Repositories (optional)"
                     value={minRepos}
                     onChange={handleInputChange(setMinRepos)}
                     className="border p-2 rounded w-full"
                 />
+
+                {/* Submit Button */}
                 <button
                     type="submit"
                     className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-full"
@@ -66,9 +73,13 @@ const Search = () => {
                 </button>
             </form>
 
+            {/* Loading State */}
             {loading && <p className="mt-4">Loading...</p>}
+
+            {/* Error Message */}
             {error && <p className="text-red-500 mt-4">{error}</p>}
 
+            {/* Results Display */}
             {results.length > 0 && (
                 <div className="mt-4 space-y-2">
                     {results.map((user) => (
@@ -83,6 +94,9 @@ const Search = () => {
                             />
                             <div>
                                 <p className="font-bold">{user.login}</p>
+                                <p className="text-gray-500">
+                                    Location: {user.location || 'N/A'}
+                                </p>
                                 <a
                                     href={user.html_url}
                                     target="_blank"
@@ -95,6 +109,11 @@ const Search = () => {
                         </div>
                     ))}
                 </div>
+            )}
+
+            {/* No Results Message */}
+            {!loading && !error && results.length === 0 && (
+                <p className="mt-4 text-gray-500">No results found. Try refining your search criteria.</p>
             )}
         </div>
     );
