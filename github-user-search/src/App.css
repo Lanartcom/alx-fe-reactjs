@@ -1,16 +1,5 @@
-.app-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #f3f4f6; /* Light gray */
-  padding: 24px;
-}
+.app-container 
+{ min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #f3f4f6;
+  padding: 24px; } 
 
-.app-title {
-  font-size: 2.5rem; /* Large font size */
-  font-weight: bold;
-  color: #1f2937; /* Dark gray */
-  margin-bottom: 32px;
-}
+  .app-title { font-size: 3rem; /* Large font size */ font-weight: bold; color: #1f2937; /* Dark gray */ margin-bottom: 32px; }
