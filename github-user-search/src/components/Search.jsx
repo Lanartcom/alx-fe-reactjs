@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { searchUsers } from '../services/api';
+import { searchUsers, fetchUserData } from '../services/api'; // Import both functions
 
 const Search = () => {
     const [username, setUsername] = useState('');
@@ -8,6 +8,7 @@ const Search = () => {
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [singleUser, setSingleUser] = useState(null); // State for single-user data
 
     const handleInputChange = (setter) => (e) => {
         setter(e.target.value);
@@ -18,7 +19,22 @@ const Search = () => {
         setLoading(true);
         setError(null);
         setResults([]); // Clear previous results
+        setSingleUser(null); // Clear single user data
 
+        if (username && !location && !minRepos) {
+            // Fetch single user if only username is provided
+            try {
+                const userData = await fetchUserData(username);
+                setSingleUser(userData);
+            } catch (err) {
+                setError('Looks like we cant find the user.');
+            } finally {
+                setLoading(false);
+            }
+            return;
+        }
+
+        // Otherwise, perform an advanced search
         try {
             const data = await searchUsers({
                 query: username,
@@ -40,7 +56,7 @@ const Search = () => {
                 {/* Username Input */}
                 <input
                     type="text"
-                    placeholder="Username (optional)"
+                    placeholder="Username"
                     value={username}
                     onChange={handleInputChange(setUsername)}
                     className="border p-2 rounded w-full"
@@ -79,6 +95,30 @@ const Search = () => {
             {/* Error Message */}
             {error && <p className="text-red-500 mt-4">{error}</p>}
 
+            {/* Single User Display */}
+            {singleUser && (
+                <div className="mt-4 p-4 border rounded flex items-center space-x-4">
+                    <img
+                        src={singleUser.avatar_url}
+                        alt={singleUser.login}
+                        className="w-16 h-16 rounded-full"
+                    />
+                    <div>
+                        <p className="font-bold">{singleUser.login}</p>
+                        <p className="text-gray-500">Location: {singleUser.location || 'N/A'}</p>
+                        <p className="text-gray-500">Public Repos: {singleUser.public_repos}</p>
+                        <a
+                            href={singleUser.html_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500"
+                        >
+                            View Profile
+                        </a>
+                    </div>
+                </div>
+            )}
+
             {/* Results Display */}
             {results.length > 0 && (
                 <div className="mt-4 space-y-2">
@@ -94,9 +134,6 @@ const Search = () => {
                             />
                             <div>
                                 <p className="font-bold">{user.login}</p>
-                                <p className="text-gray-500">
-                                    Location: {user.location || 'N/A'}
-                                </p>
                                 <a
                                     href={user.html_url}
                                     target="_blank"
@@ -112,7 +149,7 @@ const Search = () => {
             )}
 
             {/* No Results Message */}
-            {!loading && !error && results.length === 0 && (
+            {!loading && !error && results.length === 0 && !singleUser && (
                 <p className="mt-4 text-gray-500">No results found. Try refining your search criteria.</p>
             )}
         </div>
