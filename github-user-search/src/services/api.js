@@ -1,11 +1,32 @@
 import axios from 'axios';
 
+// Create an Axios instance with GitHub API base URL and headers
 const api = axios.create({
-    baseURL: import.meta.env.VITE_GITHUB_API_URL,
+    baseURL: import.meta.env.VITE_GITHUB_API_URL, // Ensure this environment variable is correctly set
     headers: {
-        Authorization: `token ${import.meta.env.VITE_GITHUB_API_KEY}`,
+        Authorization: `token ${import.meta.env.VITE_GITHUB_API_KEY}`, // Ensure the API key is correct
     },
 });
+
+/**
+ * Fetch a single user's data by username.
+ *
+ * @param {string} username - GitHub username.
+ * @returns {Promise<Object>} - User data.
+ */
+export const fetchUserData = async (username) => {
+    if (!username) {
+        throw new Error('Username is required to fetch user data.');
+    }
+
+    try {
+        const response = await api.get(`/users/${username}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        throw error;
+    }
+};
 
 /**
  * Search GitHub users with advanced query and pagination support.
